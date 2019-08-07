@@ -2,11 +2,11 @@
 Pod::Spec.new do |s|
     
     s.name         = "ZTNetwork"
-    s.version      = "0.0.1"
-    s.summary      = "A short description of ZTNetwork."
+    s.version      = "1.0.0"
+    s.summary      = "网络访问服务"
     s.source_files = "ZTNetwork/**/*.{h,m}"
     s.description  = <<-DESC
-    独立网络库
+    独立网络库,用来网络访问服务
     DESC
     
     s.homepage     = "https://gitee.com/zengwu/"
@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
     # s.watchos.deployment_target = "2.0"
     # s.tvos.deployment_target = "9.0"
     
-    s.source       = { :git => "https://gitee.com/zengwu/", :tag => s.version.to_s }
+    s.source       = { :git => "https://github.com/ernest808/ZTNetwork", :tag => s.version.to_s }
     
     # s.default_subspec = "NetworkLib"
 
