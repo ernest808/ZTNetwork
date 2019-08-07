@@ -30,40 +30,61 @@
                                       success:(SuccessBlock)successBlock
                                       failure:(FailureBlock)failureBlock
 {
-    if (reqModel.methodType == NetReqMethodTypeGet) {
-        return [self requestGetWithReqModel:reqModel header:reqModel.reqHeader progress:nil success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
-            NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
-            ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
-            NSInteger status = [resultDic[@"result"] integerValue];
-            ZZSafeBlockRun(successBlock, rsp, status, resultDic);
-        } failure:failureBlock];
-    } else if (reqModel.methodType == NetReqMethodTypePost) {
-        return [self requestPostWithReqModel:reqModel header:reqModel.reqHeader progress:nil success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
-            NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
-            ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
-            NSInteger status = [resultDic[@"result"] integerValue];
-            ZZSafeBlockRun(successBlock, rsp, status, resultDic);
-        } failure:failureBlock];
+    NSString *theUrl = reqModel.reqUrl;
+    NSDictionary *theParams = reqModel.reqParams;
+    NSDictionary *theMultipartParam = reqModel.reqMultipartDataParams;
+    
+    AFHTTPSessionManager *manager = [self managerWithHeader:reqModel.reqHeader contentType:reqModel.contentType];
+    manager.requestSerializer.timeoutInterval = reqModel.timeout.integerValue;
+    switch (reqModel.methodType) {
+        case NetReqMethodTypePost: {
+            return [self requestPostWithReqModel:manager theUrl:theUrl theParams:theParams theMultipartParam:theMultipartParam processBlock:reqModel.processBlock success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
+                NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
+                NSInteger status = [resultDic[@"result"] integerValue];
+                ZZSafeBlockRun(successBlock, rsp, status, resultDic);
+            } failure:failureBlock];
+        }
+            break;
+        case NetReqMethodTypePut: {
+            return [self requestPutWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
+                NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
+                NSInteger status = [resultDic[@"result"] integerValue];
+                ZZSafeBlockRun(successBlock, rsp, status, resultDic);
+            } failure:failureBlock];
+        }
+            break;
+        case NetReqMethodTypeDelete: {
+            return [self requestDeleteWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
+                NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
+                NSInteger status = [resultDic[@"result"] integerValue];
+                ZZSafeBlockRun(successBlock, rsp, status, resultDic);
+            } failure:failureBlock];
+        }
+            break;
+            
+        default:
+        {
+            return [self requestGetWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
+                NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
+                NSInteger status = [resultDic[@"result"] integerValue];
+                ZZSafeBlockRun(successBlock, rsp, status, resultDic);
+            } failure:failureBlock];
+        }
+            break;
     }
     return nil;
 }
 
-+ (NSURLSessionDataTask *)requestGetWithReqModel:(NetReqModel *)reqModel
-                                          header:(NSDictionary *)header
-                                        progress:(ProgressBlock)progressBlock
-                                         success:(SuccessBlock)successBlock
-                                         failure:(FailureBlock)failureBlock
-{
-    NSString *theUrl = reqModel.reqUrl;
-    NSDictionary *theParams = reqModel.reqParams;
-    
-    AFHTTPSessionManager *manager = [self managerWithHeader:header contentType:reqModel.contentType];
-    manager.requestSerializer.timeoutInterval = reqModel.timeout.integerValue;
-    NSURLSessionDataTask *dataTask = [manager GET:theUrl parameters:theParams progress:^(NSProgress * _Nonnull uploadProgress) {
-        if (progressBlock) {
-            progressBlock(uploadProgress);
-        }
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
++ (NSURLSessionDataTask *) requestDeleteWithReqModel:(AFHTTPSessionManager *)manager
+                                           theUrl:(NSString *)theUrl
+                                        theParams:(NSDictionary *)theParams
+                                          success:(SuccessBlock)successBlock
+                                          failure:(FailureBlock)failureBlock {
+    NSURLSessionDataTask *dataTask = [manager DELETE:theUrl parameters:theParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (successBlock) {
             successBlock(task.response, 200, responseObject);
         }
@@ -75,24 +96,53 @@
     return dataTask;
 }
 
-+ (NSURLSessionDataTask *)requestPostWithReqModel:(NetReqModel *)reqModel
-                                           header:(NSDictionary *)header
-                                         progress:(ProgressBlock)progressBlock
++ (NSURLSessionDataTask *) requestPutWithReqModel:(AFHTTPSessionManager *)manager
+                                           theUrl:(NSString *)theUrl
+                                        theParams:(NSDictionary *)theParams
                                           success:(SuccessBlock)successBlock
-                                          failure:(FailureBlock)failureBlock
-{
-    NSString *theUrl = reqModel.reqUrl;
-    NSDictionary *theParams = reqModel.reqParams;
-    NSDictionary *theMultipartParam = reqModel.reqMultipartDataParams;
-    
-    AFHTTPSessionManager *manager = [self managerWithHeader:header contentType:reqModel.contentType];
-    manager.requestSerializer.timeoutInterval = reqModel.timeout.integerValue;
+                                          failure:(FailureBlock)failureBlock {
+    NSURLSessionDataTask *dataTask = [manager PUT:theUrl parameters:theParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (successBlock) {
+            successBlock(task.response, 200, responseObject);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failureBlock) {
+            failureBlock(task, error);
+        }
+    }];
+    return dataTask;
+}
+
++ (NSURLSessionDataTask *) requestGetWithReqModel:(AFHTTPSessionManager *)manager
+                                           theUrl:(NSString *)theUrl
+                                        theParams:(NSDictionary *)theParams
+                                          success:(SuccessBlock)successBlock
+                                          failure:(FailureBlock)failureBlock {
+    NSURLSessionDataTask *dataTask = [manager GET:theUrl parameters:theParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (successBlock) {
+            successBlock(task.response, 200, responseObject);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failureBlock) {
+            failureBlock(task, error);
+        }
+    }];
+    return dataTask;
+}
+
++ (NSURLSessionDataTask *)requestPostWithReqModel:(AFHTTPSessionManager *)manager
+                                           theUrl:(NSString *)theUrl
+                                         theParams:(NSDictionary *)theParams
+                                         theMultipartParam:(NSDictionary *)theMultipartParam
+                                     processBlock:(ProcessBlock)processBlock
+                                          success:(SuccessBlock)successBlock
+                                          failure:(FailureBlock)failureBlock {
     NSURLSessionDataTask *dataTask = [manager POST:theUrl parameters:theParams constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSArray *multipartParamKeys = [theMultipartParam allKeys];
         for (id key in multipartParamKeys) {
             id value = theMultipartParam[key];
             if ([value isKindOfClass:[NSData class]]) {
-                    // 在网络开发中，上传文件时，是文件不允许被覆盖，文件重名
+                // 在网络开发中，上传文件时，是文件不允许被覆盖，文件重名
                 NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                 [formatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
                 NSString *dateString = [formatter stringFromDate:[NSDate date]];
@@ -103,17 +153,17 @@
                     NSError *error;
                     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                     [formatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
-
+                    
                     NSString *dateString = [formatter stringFromDate:[NSDate date]];
-
+                    
                     NSString *fileName = [NSString  stringWithFormat:@"%@.jpg", dateString];
                     [formData appendPartWithFileData:obj name:key fileName:fileName mimeType:@"image/jpeg"];
                 }];
             }
         }
     } progress:^(NSProgress * _Nonnull uploadProgress) {
-        if (progressBlock) {
-            progressBlock(uploadProgress);
+        if (processBlock) {
+            processBlock(uploadProgress);
         }
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (successBlock) {
