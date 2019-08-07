@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "BaseModel.h"
 
+/**
+ 解析数据源
+ */
 @interface BaseDataSource : NSObject
 
 /**

@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ 解析列表数据源
+ */
 @interface ListDataSource : NSObject
 
 /**
@@ -34,4 +37,5 @@
  *  @param classtype    实体类型
  */
 +(NSMutableArray*)parseDireWithListName:(NSData *)data listName:(NSString*)listName class:(Class)classtype;
+
 @end

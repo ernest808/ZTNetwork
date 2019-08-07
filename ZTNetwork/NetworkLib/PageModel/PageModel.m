@@ -14,16 +14,7 @@
 	if (self = [super init]) {
         _pageSizeName = @"pageSize";
         _pageIndexName = @"pageNumber";
-        _strUrl = [[NSString alloc]init];
-        _postData = nil;
 		[self initData];
-	}
-	return self;
-}
-
-- initWithUrl:(NSString*)url {
-	if (self = [self init]) {
-        _strUrl = url;
 	}
 	return self;
 }
@@ -31,7 +22,7 @@
 - (void)initData
 {
     _defaultPageIndex = 1;
-	_pageSize = 20;
+	_pageSize = 10;
 	_pageIndex = _defaultPageIndex;
 }
 

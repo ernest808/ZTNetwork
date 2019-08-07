@@ -21,6 +21,9 @@ typedef void(^SuccessBlock)(NSURLResponse *rsp, NSInteger code, id rspObject);
 typedef void(^FailureBlock)(NSURLSessionTask *task,NSError *error);
 typedef void(^CompleteBlock)(id result);
 
+/**
+ 网络请求
+ */
 @interface Networking : NSObject
 
 + (NSURLSessionDataTask *)requestWithReqModel:(NetReqModel *)reqModel
