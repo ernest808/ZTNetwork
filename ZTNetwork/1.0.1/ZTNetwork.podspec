@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
     s.name         = "ZTNetwork"
     s.version      = "1.0.1"
     s.summary      = "使用AFNetwork进行网络访问."
-    s.source_files = "ZTNetwork/**/*.{h,m}"
+    s.source_files = "ZTNetwork/NetworkLib","ZTNetwork/**/*.{h,m}"
     s.description  = <<-DESC
     使用AFNetwork进行网络访问的独立网络库
     DESC
