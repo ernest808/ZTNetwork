@@ -12,7 +12,7 @@
 -(id)init {
     if (self==[super init]) {
         self.methodType = NetReqMethodTypePost;
-        self.timeout = @(30.0);
+        self.timeout = @(10.0);
     }
     return self;
 }
