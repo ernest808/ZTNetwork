@@ -52,6 +52,10 @@ typedef void(^ProcessBlock)(NSProgress * _Nonnull process);
  超时时间(默认10.0秒)
  */
 @property (nonatomic, strong) NSNumber *timeout;
+/**
+ 是否外部链接(默认否)
+ */
+@property (assign, nonatomic) BOOL isExternalUrl;
 
 @property (copy, nonatomic) ProcessBlock processBlock;
 

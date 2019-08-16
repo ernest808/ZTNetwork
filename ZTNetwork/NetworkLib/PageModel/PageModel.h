@@ -47,10 +47,6 @@ typedef void(^SearchBlock)(void);
  */
 @property (nonatomic, retain) NSString * _Nullable pageStampName;
 /**
- 是否外部链接(默认否)
- */
-@property (assign, nonatomic) BOOL isExternalUrl;
-/**
  获取分页字典
  */
 -(NSMutableDictionary*)getPageDic;
