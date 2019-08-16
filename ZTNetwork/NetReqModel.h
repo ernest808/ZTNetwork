@@ -49,7 +49,7 @@ typedef void(^ProcessBlock)(NSProgress * _Nonnull process);
  */
 @property (nonatomic, strong) NSString *contentType;
 /**
- 超时时间(默认30.0秒)
+ 超时时间(默认10.0秒)
  */
 @property (nonatomic, strong) NSNumber *timeout;
 

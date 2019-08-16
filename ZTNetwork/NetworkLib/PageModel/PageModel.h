@@ -39,12 +39,25 @@ typedef void(^SearchBlock)(void);
  */
 @property (nonatomic, copy) SearchBlock searchBlock;
 /**
- 分页时间戳
+ 分页标识(用于防止分页数据重复或错乱)
  */
-@property (nonatomic, retain) NSNumber *timeStamp;
+@property (nonatomic, retain) id pageStamp;
+/**
+ 分页标识名(用于防止分页数据重复或错乱)，默认为timeStamp
+ */
+@property (nonatomic, retain) NSString * _Nullable pageStampName;
+/**
+ 是否外部链接(默认否)
+ */
+@property (assign, nonatomic) BOOL isExternalUrl;
 /**
  获取分页字典
  */
 -(NSMutableDictionary*)getPageDic;
+
+/**
+ 刷新数据(等同下拉刷新，重置分页信息)
+ */
+-(void)refresh;
 
 @end

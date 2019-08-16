@@ -14,6 +14,7 @@
 	if (self = [super init]) {
         _pageSizeName = @"pageSize";
         _pageIndexName = @"pageNumber";
+        _pageStampName = nil;
 		[self initData];
 	}
 	return self;
@@ -36,7 +37,15 @@
     NSMutableDictionary *dicPage = [[NSMutableDictionary alloc]init];
     [dicPage setObject:[NSString stringWithFormat:@"%ld",(long)_pageSize] forKey:_pageSizeName];
     [dicPage setObject:[NSString stringWithFormat:@"%ld",(long)_pageIndex] forKey:_pageIndexName];
+    if (self.pageStampName && self.pageStamp) {
+        [dicPage setObject:self.pageStamp forKey:self.pageStampName];
+    }
     return dicPage;
+}
+
+-(void)refresh {
+    self.pageIndex = self.defaultPageIndex;
+    self.pageStamp = nil;
 }
 
 @end
