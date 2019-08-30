@@ -141,25 +141,7 @@
         NSArray *multipartParamKeys = [theMultipartParam allKeys];
         for (id key in multipartParamKeys) {
             id value = theMultipartParam[key];
-            if ([value isKindOfClass:[NSData class]]) {
-                // 在网络开发中，上传文件时，是文件不允许被覆盖，文件重名
-                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                [formatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
-                NSString *dateString = [formatter stringFromDate:[NSDate date]];
-                NSString *fileName = [NSString  stringWithFormat:@"%@.jpg", dateString];
-                [formData appendPartWithFileData:value name:key fileName:fileName mimeType:@"image/jpeg"];
-            }else if ([value isKindOfClass:[NSArray class]]){
-                [value enumerateObjectsUsingBlock:^(NSData *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    NSError *error;
-                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                    [formatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
-                    
-                    NSString *dateString = [formatter stringFromDate:[NSDate date]];
-                    
-                    NSString *fileName = [NSString  stringWithFormat:@"%@.jpg", dateString];
-                    [formData appendPartWithFileData:obj name:key fileName:fileName mimeType:@"image/jpeg"];
-                }];
-            }
+            [self appendFormData:formData value:value key:key];
         }
     } progress:^(NSProgress * _Nonnull uploadProgress) {
         if (processBlock) {
@@ -175,6 +157,29 @@
         }
     }];
     return dataTask;
+}
+
++(void)appendFormData:(id<AFMultipartFormData> _Nonnull )formData value:(id)value key:(NSString*)key {
+    if ([value isKindOfClass:[NSArray class]]){
+        [value enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self appendFormData:formData value:value key:key];
+        }];
+    }else if ([value isKindOfClass:[NSData class]]) {
+        // 在网络开发中，上传文件时，是文件不允许被覆盖，文件重名
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
+        NSString *dateString = [formatter stringFromDate:[NSDate date]];
+        NSString *fileName = [NSString  stringWithFormat:@"%@", dateString];
+        [formData appendPartWithFileData:value name:key fileName:fileName mimeType:@"image/jpeg"];
+    }else if ([value isKindOfClass:[NSURL class]]) {
+        NSError *error;
+        // 在网络开发中，上传文件时，是文件不允许被覆盖，文件重名
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
+        NSString *dateString = [formatter stringFromDate:[NSDate date]];
+        NSString *fileName = [NSString  stringWithFormat:@"%@", dateString];
+        [formData appendPartWithFileURL:value name:key fileName:fileName mimeType:@"image/jpeg" error:&error];
+    }
 }
 
 @end
