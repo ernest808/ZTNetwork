@@ -34,13 +34,13 @@ Pod::Spec.new do |s|
       com.source_files = 'ZTNetwork/NetworkLib/common/*'
       end
 
-      s.subspec 'DataSorce' do |datasource|
-      datasource.source_files = 'ZTNetwork/NetworkLib/DataSource/*'
-      end
+      #s.subspec 'DataSorce' do |datasource|
+      #datasource.source_files = 'ZTNetwork/NetworkLib/DataSource/*'
+      #end
 
-      s.subspec 'Model' do |model|
-      model.source_files = 'ZTNetwork/NetworkLib/Model/*'
-      end
+      #s.subspec 'Model' do |model|
+      #model.source_files = 'ZTNetwork/NetworkLib/Model/*'
+      #end
 
       s.subspec 'PageModel' do |page|
       page.source_files = 'ZTNetwork/NetworkLib/PageModel/*'
