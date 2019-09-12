@@ -21,11 +21,11 @@ typedef void(^SearchBlock)(void);
 /**
  每页数量参数名称
  */
-@property (nonatomic,assign) NSString *pageSizeName;
+@property (nonatomic,strong) NSString *pageSizeName;
 /**
  页码参数名称
  */
-@property (nonatomic,retain) NSString *pageIndexName;
+@property (nonatomic,strong) NSString *pageIndexName;
 /**
  每页数量(默认10)
  */
@@ -41,15 +41,15 @@ typedef void(^SearchBlock)(void);
 /**
  分页标识(用于防止分页数据重复或错乱)
  */
-@property (nonatomic, retain) id pageStamp;
+@property (nonatomic, strong) id pageStamp;
 /**
  分页标识名(用于防止分页数据重复或错乱)，默认为timeStamp
  */
-@property (nonatomic, retain) NSString * _Nullable pageStampName;
+@property (nonatomic, strong) NSString * _Nullable pageStampName;
 /**
  获取分页字典
  */
--(NSMutableDictionary*)getPageDic;
+-(NSMutableDictionary * _Nonnull)getPageDic;
 
 /**
  刷新数据(等同下拉刷新，重置分页信息)
