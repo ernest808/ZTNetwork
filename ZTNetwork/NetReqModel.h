@@ -38,6 +38,8 @@ typedef void(^ProcessBlock)(NSProgress * _Nonnull process);
 @property (nonatomic, strong) NSDictionary *reqParams;
 /**
  请求上传文件参数
+ key为请求接口的参数
+ 数据为NSData时，文件名按时间自动生成，默认后缀名为.jpg，如需指定后缀名，则在key后加上后缀.
  */
 @property (nonatomic, strong) NSDictionary *reqMultipartDataParams;
 /**

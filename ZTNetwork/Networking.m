@@ -169,15 +169,21 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
         NSString *dateString = [formatter stringFromDate:[NSDate date]];
-        NSString *fileName = [NSString  stringWithFormat:@"%@", dateString];
-        [formData appendPartWithFileData:value name:key fileName:fileName mimeType:@"image/jpeg"];
+        NSString *extention = @"jpg";
+        NSString *name = key;
+        if ([key pathExtension].length>0) {
+            extention = [key pathExtension];
+            name = [key stringByDeletingPathExtension];
+        }
+        NSString *fileName = [NSString stringWithFormat:@"%@.%@", dateString,extention];
+        [formData appendPartWithFileData:value name:name fileName:fileName mimeType:@"image/jpeg"];
     }else if ([value isKindOfClass:[NSURL class]]) {
         NSError *error;
         // 在网络开发中，上传文件时，是文件不允许被覆盖，文件重名
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
         NSString *dateString = [formatter stringFromDate:[NSDate date]];
-        NSString *fileName = [NSString  stringWithFormat:@"%@", dateString];
+        NSString *fileName = [NSString  stringWithFormat:@"%@.%@", dateString, [(NSURL*)value absoluteString].pathExtension];
         [formData appendPartWithFileURL:value name:key fileName:fileName mimeType:@"image/jpeg" error:&error];
     }
 }
