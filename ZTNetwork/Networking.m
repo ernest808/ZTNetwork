@@ -16,9 +16,14 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [AFHTTPSessionManager manager];;
+    });
+    if ([contentType isEqualToString:@"application/json"]) {
+        manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    }else {
         manager.requestSerializer = [AFHTTPRequestSerializer serializer];
         manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    });
+    }
     
     for (NSString *key in header) {
         [manager.requestSerializer setValue:header[key] forHTTPHeaderField:key];
@@ -39,7 +44,12 @@
     switch (reqModel.methodType) {
         case NetReqMethodTypePost: {
             return [self requestPostWithReqModel:manager theUrl:theUrl theParams:theParams theMultipartParam:theMultipartParam processBlock:reqModel.processBlock success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
-                NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                NSDictionary *resultDic;
+                if ([rspObject isKindOfClass:[NSDictionary class]]) {
+                    resultDic = rspObject;
+                }else if ([rspObject isKindOfClass:[NSData class]]) {
+                    resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                }
                 ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
                 NSInteger status = [resultDic[@"result"] integerValue];
                 ZZSafeBlockRun(successBlock, rsp, status, resultDic);
@@ -48,7 +58,12 @@
             break;
         case NetReqMethodTypePut: {
             return [self requestPutWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
-                NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                NSDictionary *resultDic;
+                if ([rspObject isKindOfClass:[NSDictionary class]]) {
+                    resultDic = rspObject;
+                }else if ([rspObject isKindOfClass:[NSData class]]) {
+                    resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                }
                 ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
                 NSInteger status = [resultDic[@"result"] integerValue];
                 ZZSafeBlockRun(successBlock, rsp, status, resultDic);
@@ -57,7 +72,12 @@
             break;
         case NetReqMethodTypeDelete: {
             return [self requestDeleteWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
-                NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                NSDictionary *resultDic;
+                if ([rspObject isKindOfClass:[NSDictionary class]]) {
+                    resultDic = rspObject;
+                }else if ([rspObject isKindOfClass:[NSData class]]) {
+                    resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                }
                 ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
                 NSInteger status = [resultDic[@"result"] integerValue];
                 ZZSafeBlockRun(successBlock, rsp, status, resultDic);
@@ -68,7 +88,12 @@
         default:
         {
             return [self requestGetWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
-                NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                NSDictionary *resultDic;
+                if ([rspObject isKindOfClass:[NSDictionary class]]) {
+                    resultDic = rspObject;
+                }else if ([rspObject isKindOfClass:[NSData class]]) {
+                    resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
+                }
                 ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
                 NSInteger status = [resultDic[@"result"] integerValue];
                 ZZSafeBlockRun(successBlock, rsp, status, resultDic);
