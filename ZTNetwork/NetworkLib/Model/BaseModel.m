@@ -51,15 +51,15 @@
                             [self setValue:[controller initWithData:[result objectForKey:key]] forKey:key];
                         }else if([classType length]>0 && [controller isKindOfClass:NSArray.class]){
                             NSArray *tempArray = [ListDataSource parseDireWithArray:[result objectForKey:key] class:NSClassFromString(arrayType)];
-                            if (tempArray.count>0) {
+//                            if (tempArray.count>0) {
                                 //                                object_setIvar(self, ivar, tempArray);
                                 
                                 [self setValue:tempArray forKey:key];
-                            }else{
+//                            }else{
                                 //                                object_setIvar(self, ivar, [result objectForKey:key]);
                                 
-                                [self setValue:[result objectForKey:key] forKey:key];
-                            }
+//                                [self setValue:[result objectForKey:key] forKey:key];
+//                            }
                         }else{
                             //                            object_setIvar(self, ivar, [result objectForKey:key]);
                             
