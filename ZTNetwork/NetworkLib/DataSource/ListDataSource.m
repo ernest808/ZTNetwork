@@ -75,10 +75,14 @@ static NSString *_listName;
 +(NSMutableArray*) parseDireWithArray:(NSArray*)array class:(Class)class
 {
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    if ([array isKindOfClass:[NSArray class]] && array.count>0 && class) {
-        for (NSDictionary *dic in array) {
-            id item = [[class alloc] initWithData:dic];
-            [items addObject:item];
+    if ([array isKindOfClass:[NSArray class]] && array.count>0) {
+        for (id dic in array) {
+            if (class) {
+                id item = [[class alloc] initWithData:dic];
+                [items addObject:item];
+            }else {
+                [items addObject:dic];
+            }
         }
     }
     return items;
