@@ -51,7 +51,7 @@
                     resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
                 }
                 ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
-                NSInteger status = [resultDic[@"result"] integerValue];
+                NSInteger status = [resultDic[reqModel.resultCodeKey] integerValue];
                 ZZSafeBlockRun(successBlock, rsp, status, resultDic);
             } failure:failureBlock];
         }
@@ -65,7 +65,7 @@
                     resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
                 }
                 ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
-                NSInteger status = [resultDic[@"result"] integerValue];
+                NSInteger status = [resultDic[reqModel.resultCodeKey] integerValue];
                 ZZSafeBlockRun(successBlock, rsp, status, resultDic);
             } failure:failureBlock];
         }
@@ -79,7 +79,7 @@
                     resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
                 }
                 ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
-                NSInteger status = [resultDic[@"result"] integerValue];
+                NSInteger status = [resultDic[reqModel.resultCodeKey] integerValue];
                 ZZSafeBlockRun(successBlock, rsp, status, resultDic);
             } failure:failureBlock];
         }
@@ -95,7 +95,7 @@
                     resultDic = [NSJSONSerialization JSONObjectWithData:rspObject options:0 error:nil];
                 }
                 ZTNetworkLog(@"success:%@, %@",reqModel.reqUrl, resultDic);
-                NSInteger status = [resultDic[@"result"] integerValue];
+                NSInteger status = [resultDic[reqModel.resultCodeKey] integerValue];
                 ZZSafeBlockRun(successBlock, rsp, status, resultDic);
             } failure:failureBlock];
         }

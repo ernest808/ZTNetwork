@@ -13,6 +13,7 @@
     if (self==[super init]) {
         self.methodType = NetReqMethodTypePost;
         self.timeout = @(10.0);
+        self.resultCodeKey = @"result";
     }
     return self;
 }
