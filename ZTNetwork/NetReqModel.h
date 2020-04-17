@@ -38,6 +38,8 @@ typedef void(^ProcessBlock)(NSProgress * _Nonnull process);
 @property (nonatomic, strong) NSDictionary *reqParams;
 /// 返回结果Code的key，默认为result
 @property (nonatomic, strong) NSString *resultCodeKey;
+/// 预留字段
+@property (nonatomic, strong) id foo;
 /**
  请求上传文件参数
  key为请求接口的参数
