@@ -30,6 +30,13 @@
                     NSString *key = [[NSString stringWithCString:name  encoding:NSUTF8StringEncoding] trim:@"_"];
                     NSString *classType = [[NSString stringWithCString:type encoding:NSUTF8StringEncoding] trim:@"@\""];
                     
+                    if ([self respondsToSelector:@selector(ReplaceKeys)]) {
+                        NSDictionary *dicReplace = [self ReplaceKeys];
+                        if (dicReplace && [dicReplace objectForKey:key]) {
+                            key = [dicReplace objectForKey:key];
+                        }
+                    }
+                    
                     NSString *arrayType = [[NSString alloc]init];
                     if ([classType rangeOfString:@"NSArray"].location==0 || [classType rangeOfString:@"NSMutableArray"].location==0) {
                         NSArray *array = [classType componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
