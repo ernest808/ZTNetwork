@@ -29,11 +29,12 @@
                     
                     NSString *key = [[NSString stringWithCString:name  encoding:NSUTF8StringEncoding] trim:@"_"];
                     NSString *classType = [[NSString stringWithCString:type encoding:NSUTF8StringEncoding] trim:@"@\""];
+                    NSString *replaceKey = key;
                     
                     if ([self respondsToSelector:@selector(ReplaceKeys)]) {
                         NSDictionary *dicReplace = [self ReplaceKeys];
                         if (dicReplace && [dicReplace objectForKey:key]) {
-                            key = [dicReplace objectForKey:key];
+                            replaceKey = [dicReplace objectForKey:key];
                         }
                     }
                     
@@ -51,13 +52,13 @@
                         [unarchiver finishDecoding];
                         result = myDictionary;
                     }
-                    if ([result objectForKey:key] && ![[result objectForKey:key] isKindOfClass:[NSNull class]]) {
+                    if ([result objectForKey:replaceKey] && ![[result objectForKey:replaceKey] isKindOfClass:[NSNull class]]) {
                         Class controllClass=NSClassFromString(classType);
                         id controller = [[controllClass alloc]init];
                         if ([classType length]>0 && [controller isKindOfClass:BaseModel.class]) {
-                            [self setValue:[controller initWithData:[result objectForKey:key]] forKey:key];
+                            [self setValue:[controller initWithData:[result objectForKey:replaceKey]] forKey:key];
                         }else if([classType length]>0 && [controller isKindOfClass:NSArray.class]){
-                            NSArray *tempArray = [ListDataSource parseDireWithArray:[result objectForKey:key] class:NSClassFromString(arrayType)];
+                            NSArray *tempArray = [ListDataSource parseDireWithArray:[result objectForKey:replaceKey] class:NSClassFromString(arrayType)];
 //                            if (tempArray.count>0) {
                                 //                                object_setIvar(self, ivar, tempArray);
                                 
@@ -70,7 +71,7 @@
                         }else{
                             //                            object_setIvar(self, ivar, [result objectForKey:key]);
                             
-                            [self setValue:[result objectForKey:key] forKey:key];
+                            [self setValue:[result objectForKey:replaceKey] forKey:key];
                         }
                     }
                 }
