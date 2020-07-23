@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = "ZTNetwork"
-    s.version      = "1.1.4"
+    s.version      = "1.1.5"
     s.summary      = "使用AFNetwork进行网络访问."
     s.source_files = "ZTNetwork/**/*.{h,m}"
     s.description  = <<-DESC
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
        
     # s.platform     = :ios
     s.platform     = :ios, "8.0"
-    s.dependency   'AFNetworking', '~> 3.2.1'    
+    s.dependency   'AFNetworking'    
     #  When using multiple platforms
     #s.ios.deployment_target = "7.0"
     # s.osx.deployment_target = "10.7"
