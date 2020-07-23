@@ -43,7 +43,7 @@
     manager.requestSerializer.timeoutInterval = reqModel.timeout.integerValue;
     switch (reqModel.methodType) {
         case NetReqMethodTypePost: {
-            return [self requestPostWithReqModel:manager theUrl:theUrl theParams:theParams theMultipartParam:theMultipartParam processBlock:reqModel.processBlock success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
+            return [self requestPostWithReqModel:manager theUrl:theUrl theParams:theParams theMultipartParam:theMultipartParam headers:reqModel.reqHeader processBlock:reqModel.processBlock success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
                 NSDictionary *resultDic;
                 if ([rspObject isKindOfClass:[NSDictionary class]]) {
                     resultDic = rspObject;
@@ -57,7 +57,7 @@
         }
             break;
         case NetReqMethodTypePut: {
-            return [self requestPutWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
+            return [self requestPutWithReqModel:manager theUrl:theUrl theParams:theParams headers:reqModel.reqHeader success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
                 NSDictionary *resultDic;
                 if ([rspObject isKindOfClass:[NSDictionary class]]) {
                     resultDic = rspObject;
@@ -71,7 +71,7 @@
         }
             break;
         case NetReqMethodTypeDelete: {
-            return [self requestDeleteWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
+            return [self requestDeleteWithReqModel:manager theUrl:theUrl theParams:theParams headers:reqModel.reqHeader success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
                 NSDictionary *resultDic;
                 if ([rspObject isKindOfClass:[NSDictionary class]]) {
                     resultDic = rspObject;
@@ -87,7 +87,7 @@
             
         default:
         {
-            return [self requestGetWithReqModel:manager theUrl:theUrl theParams:theParams success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
+            return [self requestGetWithReqModel:manager theUrl:theUrl theParams:theParams headers:reqModel.reqHeader success:^(NSURLResponse *rsp, NSInteger code, id rspObject) {
                 NSDictionary *resultDic;
                 if ([rspObject isKindOfClass:[NSDictionary class]]) {
                     resultDic = rspObject;
@@ -105,11 +105,13 @@
 }
 
 + (NSURLSessionDataTask *) requestDeleteWithReqModel:(AFHTTPSessionManager *)manager
-                                           theUrl:(NSString *)theUrl
-                                        theParams:(NSDictionary *)theParams
-                                          success:(SuccessBlock)successBlock
-                                          failure:(FailureBlock)failureBlock {
-    NSURLSessionDataTask *dataTask = [manager DELETE:theUrl parameters:theParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                              theUrl:(NSString *)theUrl
+                                           theParams:(NSDictionary *)theParams
+                                             headers:(NSDictionary*)headers
+                                             success:(SuccessBlock)successBlock
+                                             failure:(FailureBlock)failureBlock {
+    
+    NSURLSessionDataTask *dataTask = [manager DELETE:theUrl parameters:theParams headers:headers success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (successBlock) {
             successBlock(task.response, 200, responseObject);
         }
@@ -124,9 +126,10 @@
 + (NSURLSessionDataTask *) requestPutWithReqModel:(AFHTTPSessionManager *)manager
                                            theUrl:(NSString *)theUrl
                                         theParams:(NSDictionary *)theParams
+                                          headers:(NSDictionary*)headers
                                           success:(SuccessBlock)successBlock
                                           failure:(FailureBlock)failureBlock {
-    NSURLSessionDataTask *dataTask = [manager PUT:theUrl parameters:theParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSURLSessionDataTask *dataTask = [manager PUT:theUrl parameters:theParams headers:headers success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (successBlock) {
             successBlock(task.response, 200, responseObject);
         }
@@ -141,9 +144,10 @@
 + (NSURLSessionDataTask *) requestGetWithReqModel:(AFHTTPSessionManager *)manager
                                            theUrl:(NSString *)theUrl
                                         theParams:(NSDictionary *)theParams
+                                          headers:(NSDictionary*)headers
                                           success:(SuccessBlock)successBlock
                                           failure:(FailureBlock)failureBlock {
-    NSURLSessionDataTask *dataTask = [manager GET:theUrl parameters:theParams success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSURLSessionDataTask *dataTask = [manager GET:theUrl parameters:theParams headers:headers progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (successBlock) {
             successBlock(task.response, 200, responseObject);
         }
@@ -159,10 +163,11 @@
                                            theUrl:(NSString *)theUrl
                                          theParams:(NSDictionary *)theParams
                                          theMultipartParam:(NSDictionary *)theMultipartParam
+                                         headers:(NSDictionary*)headers
                                      processBlock:(ProcessBlock)processBlock
                                           success:(SuccessBlock)successBlock
                                           failure:(FailureBlock)failureBlock {
-    NSURLSessionDataTask *dataTask = [manager POST:theUrl parameters:theParams constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    NSURLSessionDataTask *dataTask = [manager POST:theUrl parameters:theParams headers:headers constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSArray *multipartParamKeys = [theMultipartParam allKeys];
         for (id key in multipartParamKeys) {
             id value = theMultipartParam[key];
